@@ -11,6 +11,7 @@ import webbrowser
 import threading
 
 
+# Class for configuring the User-Agent
 class UserAgentConfig(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
@@ -20,6 +21,7 @@ class UserAgentConfig(tk.Toplevel):
         self.parent = parent
         self.create_widgets()
 
+    # Create the input fields and buttons
     def create_widgets(self):
         label = ttk.Label(self, text="Enter a user agent:")
         label.pack(pady=10)
@@ -30,18 +32,20 @@ class UserAgentConfig(tk.Toplevel):
         save_button = ttk.Button(self, text="Save", command=self.save_user_agent)
         save_button.pack(pady=10)
 
+    # Save the User-Agent and update the configuration
     def save_user_agent(self):
         user_agent = self.user_agent_entry.get().strip()
         if user_agent:
-            self.parent.save_config('user_agent', user_agent)  # Guardar en config.json
+            self.parent.save_config('user_agent', user_agent)  # Save to config.json
             messagebox.showinfo("Success", "User-Agent saved successfully.")
             self.parent.update_user_agent()
-            self.destroy()  # Cierra la ventana una vez guardado el User-Agent
-            self.parent.load_main_app()  # Ahora carga la ventana principal
+            self.destroy()  # Close the window once the User-Agent is saved
+            self.parent.load_main_app()  # Load the main window
         else:
             messagebox.showwarning("Warning", "The User-Agent field cannot be empty.")
 
 
+# Main window class for the app
 class BrowserWindow(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -50,7 +54,7 @@ class BrowserWindow(tk.Tk):
         self.data = pd.DataFrame()
         self.directory_path = tk.StringVar()
 
-        # Cargar la configuración guardada
+        # Load saved configuration
         config_data = self.load_config()
         saved_directory = config_data.get('directory', '')
         user_agent = config_data.get('user_agent', '')
@@ -70,6 +74,7 @@ class BrowserWindow(tk.Tk):
         self.style = ttk.Style()
         self.style.theme_use('clam')
 
+        # Configure styles
         self.style.configure("TMenu", background='#e67e00', foreground='#000000', font=('Arial', 10, 'bold'))
         self.style.configure("TButton", background='#d67d1e', foreground='#000000', font=('Arial', 10, 'bold'))
         self.style.configure("TLabel", font=('Arial', 12), background='#1e1e1e', foreground='#f5f5f5')
@@ -78,17 +83,16 @@ class BrowserWindow(tk.Tk):
         self.style.configure("Treeview.Heading", font=('Arial', 12, 'bold'), background='#242426', foreground='#f5f5f5')
         self.style.map("TButton", background=[('active', '#555555')], foreground=[('active', '#ffffff')])
 
-        # Si hay user-agent, cargar la ventana principal
+        # Show User-Agent configuration if not set
         if not self.user_agent_data:
-            self.withdraw()  # Oculta la ventana principal hasta que se configure el user-agent
+            self.withdraw()  # Hide main window until User-Agent is set
             self.open_user_agent_window(modal=True)
         else:
             self.show_loading_screen()
             self.after(100, self.load_main_app)
 
+    # Show a loading screen while the app initializes
     def show_loading_screen(self):
-        """Displays the loading screen with improved aesthetics."""
-
         self.loading_screen = tk.Toplevel(self)
         self.loading_screen.geometry('400x300')
         self.loading_screen.configure(bg='#1e1e1e')
@@ -128,14 +132,15 @@ class BrowserWindow(tk.Tk):
         self.loading_screen.transient(self)
         self.loading_screen.grab_set()
 
+    # Animate the loading spinner
     def animate_spinner(self):
-        """Animar el spinner en la pantalla de carga."""
         next_item = next(self.spinner_items_cycle)
         for item in self.spinner_items:
             self.canvas.itemconfig(item, fill='#f5f5f5')
         self.canvas.itemconfig(next_item, fill='#ffcc00')
         self.loading_screen.after(100, self.animate_spinner)
 
+    # Load company data from the SEC API
     def _load_company_data(self):
         try:
             headers = self.user_agent_data
@@ -151,6 +156,7 @@ class BrowserWindow(tk.Tk):
             self.data = pd.DataFrame()
             self.show_user_agent_error(e)
 
+    # Build the main GUI
     def _build_gui(self):
         menu_frame = tk.Frame(self, bg='#FF851B', height=25)
         menu_frame.pack(fill='x')
@@ -208,6 +214,7 @@ class BrowserWindow(tk.Tk):
         self.grid_rowconfigure(2, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
+    # Load the main app
     def load_main_app(self):
         self._build_gui()
         self.close_loading_screen()
@@ -216,28 +223,24 @@ class BrowserWindow(tk.Tk):
         self.focus_force()
         self.entry.focus_set()
 
+    # Close the loading screen
     def close_loading_screen(self):
-        """Closes the loading screen."""
         if hasattr(self, 'loading_screen'):
             self.loading_screen.destroy()
 
+    # Update the User-Agent in the app and reload data
     def update_user_agent(self):
-        """Updates the User-Agent and reloads the data."""
         config_data = self.load_config()
         user_agent = config_data.get('user_agent', '')
         self.user_agent_data = {'User-Agent': user_agent} if user_agent else None
         if self.user_agent_data:
             self._load_company_data()
 
+    # Open the documentation page in a browser
     def open_documentation(self):
-        webbrowser.open("https://github.com/samuellleo/Mini-Terminal")
+        webbrowser.open("https://github.com/samuellleo/Mini-Terminal?tab=readme-ov-file#mini-terminal")
 
-    def open_detailed_window(self):
-        if self.selected_cik:
-            self.thread_pool.submit(self.load_data_and_show_detailed_window, self.selected_cik, self.selected_ticker)
-        else:
-            messagebox.showwarning("Warning", "Please select a company before proceeding.")
-
+    # Export financial data to Excel
     def get_financial_data(self):
         def extract_data(all_data, path=None):
             result = []
@@ -318,14 +321,15 @@ class BrowserWindow(tk.Tk):
 
         threading.Thread(target=perform_data_fetching).start()
 
+    # Open a file dialog to select the output directory
     def select_directory(self):
         directory = filedialog.askdirectory()
         if directory:
             self.directory_path.set(directory)
-            self.save_config('directory', directory)  # Guarda el directorio seleccionado
+            self.save_config('directory', directory)  # Save selected directory
 
+    # Save configuration to config.json
     def save_config(self, key, value):
-        """Guarda un valor en el archivo config.json."""
         try:
             config = {}
             if os.path.exists('config.json'):
@@ -337,8 +341,8 @@ class BrowserWindow(tk.Tk):
         except Exception as e:
             messagebox.showerror("Error", f"Error saving {key}: {str(e)}")
 
+    # Load saved configuration from config.json
     def load_config(self):
-        """Carga la configuración guardada desde el archivo config.json."""
         if os.path.exists('config.json'):
             try:
                 with open('config.json', 'r') as f:
@@ -348,6 +352,7 @@ class BrowserWindow(tk.Tk):
                 return {}
         return {}
 
+    # Search functionality for company data
     def search(self, value):
         self.listbox.delete(*self.listbox.get_children())
         if not self.data.empty and value:
@@ -358,10 +363,12 @@ class BrowserWindow(tk.Tk):
                 title_upper = row['title'].upper()
                 self.listbox.insert("", "end", values=(row['cik_str'], row['ticker'], title_upper))
 
+    # Handle search input changes
     def on_keyrelease(self, event):
         value = event.widget.get().strip().lower()
         self.after(300, lambda: self.search(value))
 
+    # Handle selection from the listbox
     def on_select(self, event):
         selected_item = self.listbox.selection()
         if selected_item:
@@ -369,11 +376,13 @@ class BrowserWindow(tk.Tk):
             self.selected_cik = values[0]
             self.selected_ticker = values[1]
 
+    # Open the User-Agent configuration window
     def open_user_agent_window(self, modal=False):
         config_window = UserAgentConfig(self)
         if modal:
             self.wait_window(config_window)
 
+    # Show error if there's an issue with the User-Agent or API data
     def show_user_agent_error(self, error):
         error_message = f"Connection error or invalid data: {error}\n\n" \
                         "The User-Agent used may not be valid. " \
@@ -381,6 +390,7 @@ class BrowserWindow(tk.Tk):
         messagebox.showerror("Connection Error", error_message)
 
 
+# Start the application
 if __name__ == "__main__":
     app = BrowserWindow()
     app.mainloop()
