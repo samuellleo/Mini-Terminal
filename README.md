@@ -9,8 +9,23 @@ This program provides a graphical user interface (GUI) for searching and extract
 ## 🛠️Installation
 ### Manual instalation
   - Ensure you have Python 3.10.5 or lattest versions installed.
-  - Install the following libraries
-
+```bash
+python --version
+```
+  - Create a virtualenv.
+```bash
+python -m venv venv_name #ex: python -m venv env
+```
+  - Activate the Virtual Environment
+```bash
+#On Windows
+venv_name\Scripts\activate
+```
+```bash
+#On macOS/Linux
+source venv_name/bin/activate
+```
+  - Install the following libraries.
 ```bash
 #Using pip
 pip install tkinter
