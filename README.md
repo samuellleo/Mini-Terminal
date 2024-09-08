@@ -25,13 +25,9 @@ venv_name\Scripts\activate
 #On macOS/Linux
 source venv_name/bin/activate
 ```
-  - Install the following libraries.
+  - Install the required libraries
 ```bash
-#Using pip
-pip install tkinter
-pip install requests
-pip install pandas
-pip install openpyxl
+pip install -r requirements.txt
 ```
   - Run the main script -> main_menu.py
 
