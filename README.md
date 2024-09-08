@@ -36,7 +36,7 @@ pip install openpyxl
   - Run the main script -> main_menu.py
 
 ### Using the Windows installer
-(Put the link)
+👷Work in progress👷
 
 ## ⚙️Configuration
   - User-Agent Configuration:
