@@ -17,6 +17,7 @@ class UserAgentConfig(tk.Toplevel):
         super().__init__(parent)
         self.title("Configure User-Agent")
         self.geometry("400x200")
+        self.iconbitmap(f'images/logo.ico')
         self.configure(bg='#1e1e1e')
         self.parent = parent
         self.create_widgets()
@@ -158,6 +159,10 @@ class BrowserWindow(tk.Tk):
 
     # Build the main GUI
     def _build_gui(self):
+        # Eliminar el menú actual si ya existe
+        for widget in self.winfo_children():
+            widget.destroy()
+
         menu_frame = tk.Frame(self, bg='#FF851B', height=25)
         menu_frame.pack(fill='x')
 
