@@ -32,7 +32,7 @@ pip install -r requirements.txt
   - Run the main script -> main_menu.py
 
 ### Using the Windows installer
-👷Work in progress👷
+[Click to download](https://github.com/samuellleo/Mini-Terminal/raw/main/Mini-Terminal%20-%20Installer.exe?download=)
 
 ## ⚙️Configuration
   - User-Agent Configuration:
