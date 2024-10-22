@@ -8,7 +8,7 @@ This program provides a graphical user interface (GUI) for searching and extract
 
 ## 🛠️Installation
 ### Manual instalation
-  - Ensure you have Python 3.10.5 or lattest versions installed.
+  - Ensure you have Python 3.10.5 or latest versions installed.
 ```bash
 python --version
 ```
@@ -38,7 +38,7 @@ pip install -r requirements.txt
   - User-Agent Configuration:
 On the first launch, you'll be prompted to input a "User-Agent". This is necessary to interact with the EDGAR API. You can change this configuration later via the "Configuration" menu under "User-Agent".
   - Output Directory:
-The program allows you to specify the directory where the Excel files will be saved. You can set or change this directory in the "Configuration" menu under "Output Directory".
+The program allows you to specify the directory where the Excel files will be saved. You can set or change this directory in the "Output Directory" menu under "Configuration".
 
 <p align="center">
   <img src="./images/config.PNG" alt="Logo de la empresa" width="400">
@@ -50,7 +50,7 @@ The program allows you to specify the directory where the Excel files will be sa
   - Export Button: After selecting a company, click "Export to Excel" to generate an Excel file with all available financial data.
 
 ## 🛑Known Issues and Limitations
-  - The "User-Agent" must be valid to retrieve data; invalid user-agents will cause connection errors. A valid user-agent can be "example@gmail.com" or "<<company name>> name.shurname@<<company name>>.com"
+  - The "User-Agent" must be valid to retrieve data; invalid user-agents will cause connection errors. A valid user-agent can be "example@gmail.com" or "<<company name>> name.surname@<<company name>>.com"
   - Data retrieval can take some time depending on the size of the company's filings.
 
 ## 🔗US Securities and Exchange Commision API docummentation
